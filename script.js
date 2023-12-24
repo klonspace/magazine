@@ -98,6 +98,7 @@ wrappingPaper.src = "cover2.jpg";
 
 document.body.addEventListener("click", () => {
     if (audio.paused) {
+        document.title = "Merry Christmas"
         audio.play()
         audio.loop = true;
         document.querySelector("#message").style.visibility = "hidden"
