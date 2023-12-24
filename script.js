@@ -13,7 +13,7 @@ var img = new Image()
 
 img.onload = () => {
     document.querySelector("#container").appendChild(img)
-    sizeCanvas()
+ 
     window.addEventListener("resize", sizeCanvas)
 
     var xmastree = new Image();
@@ -27,11 +27,11 @@ img.onload = () => {
 
     drawCanvas.width = window.screen.width;
     drawCanvas.height = window.screen.height;
-
     function sizeCanvas() {
         var box = img.getBoundingClientRect()
         canvas.width = box.width
         canvas.height = box.height
+        drawWrapping()
     }
 
     // drawContext.fillStyle = "white"
@@ -47,6 +47,11 @@ img.onload = () => {
 
     function drawWrapping() {
         // context.fillStyle = "yellow"
+        context.globalCompositeOperation = "source-over"
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        context.drawImage(drawCanvas, 0, 0)
+
+        context.globalCompositeOperation = "source-out"
         context.drawImage(wrappingPaper, 0, 0, canvas.width, canvas.height)
     }
     function startDraw(e) {
@@ -74,11 +79,7 @@ img.onload = () => {
 
             drawShape(e.layerX, e.layerY)
 
-            context.globalCompositeOperation = "source-over"
-            context.clearRect(0, 0, canvas.width, canvas.height)
-            context.drawImage(drawCanvas, 0, 0)
 
-            context.globalCompositeOperation = "source-out"
             drawWrapping();
 
             lastX = e.layerX;
@@ -110,6 +111,9 @@ img.onload = () => {
     }
 
     wrappingPaper.src = "cover2.jpg";
+
+    
+    sizeCanvas()
 }
 
 img.src = "no2.jpg"
