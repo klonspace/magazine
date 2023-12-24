@@ -89,6 +89,19 @@ function endDraw() {
 var wrappingPaper = new Image()
 wrappingPaper.onload = () => {
     drawWrapping()
+    document.querySelector("#message").innerHTML = "Click anywhere to start"
+    document.body.addEventListener("click", () => {
+        if (audio.paused) {
+            document.title = "Merry Christmas"
+            audio.play()
+            audio.loop = true;
+            document.querySelector("#message").style.visibility = "hidden"
+            canvas.style.visibility = "visible"
+            setTimeout(() => {
+                img.style.visibility = "visible"
+            }, 100)
+        }
+    })
 }
 
 wrappingPaper.src = "cover2.jpg";
@@ -96,14 +109,5 @@ wrappingPaper.src = "cover2.jpg";
 
 
 
-document.body.addEventListener("click", () => {
-    if (audio.paused) {
-        document.title = "Merry Christmas"
-        audio.play()
-        audio.loop = true;
-        document.querySelector("#message").style.visibility = "hidden"
-        canvas.style.visibility = "visible"
-        img.style.visibility = "visible"
-    }
-})
+
 
