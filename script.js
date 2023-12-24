@@ -13,7 +13,7 @@ window.addEventListener("resize", sizeCanvas)
 
 var xmastree = new Image();
 
-xmastree.src = "/xmas.png";
+xmastree.src = "xmas.png";
 
 
 var drawCanvas = document.createElement("canvas")
@@ -91,7 +91,7 @@ wrappingPaper.onload = () => {
     drawWrapping()
 }
 
-wrappingPaper.src = "/cover2.jpg";
+wrappingPaper.src = "cover2.jpg";
 
 
 

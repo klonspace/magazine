@@ -13,7 +13,6 @@ let wind = {
     max: 0.25,
     easing: 0.005
 }
-console.log(ShaderProgram)
 
 const snow = new ShaderProgram(holder, {
     depthTest: false,
