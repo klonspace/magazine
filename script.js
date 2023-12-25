@@ -13,7 +13,7 @@ var img = new Image()
 
 img.onload = () => {
     document.querySelector("#container").appendChild(img)
- 
+
     window.addEventListener("resize", sizeCanvas)
 
     var xmastree = new Image();
@@ -24,19 +24,33 @@ img.onload = () => {
     var drawCanvas = document.createElement("canvas")
     var drawContext = drawCanvas.getContext("2d")
 
+    var w = 0;
+    var h = 0;
 
-    drawCanvas.width = window.screen.width;
-    drawCanvas.height = window.screen.height;
+    console.log(window.devicePixelRatio)
+
+    drawCanvas.width = window.screen.width * window.devicePixelRatio;
+    drawCanvas.height = window.screen.height * window.devicePixelRatio;
+
+    drawContext.scale(window.devicePixelRatio, window.devicePixelRatio)
+
+    var xoffset = 0
+    var yoffset = 0
     function sizeCanvas() {
+
+
+
         var box = img.getBoundingClientRect()
-        canvas.width = box.width
-        canvas.height = box.height
+        xoffset = box.left;
+        yoffset = box.top
+        w = box.width
+        h = box.height
+        canvas.width = w * window.devicePixelRatio;
+        canvas.height = h * window.devicePixelRatio;
+        context.scale(window.devicePixelRatio, window.devicePixelRatio)
         drawWrapping()
     }
 
-    // drawContext.fillStyle = "white"
-
-    // drawContext.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
     canvas.addEventListener("mouseenter", startDraw)
     canvas.addEventListener("mousemove", draw)
     canvas.addEventListener("mouseleave", endDraw)
@@ -48,42 +62,43 @@ img.onload = () => {
     function drawWrapping() {
         // context.fillStyle = "yellow"
         context.globalCompositeOperation = "source-over"
-        context.clearRect(0, 0, canvas.width, canvas.height)
-        context.drawImage(drawCanvas, 0, 0)
+        context.clearRect(0, 0, w, h)
+        context.drawImage(drawCanvas, 0, 0, drawCanvas.width / window.devicePixelRatio, drawCanvas.height / window.devicePixelRatio)
 
         context.globalCompositeOperation = "source-out"
-        context.drawImage(wrappingPaper, 0, 0, canvas.width, canvas.height)
+        context.drawImage(wrappingPaper, 0, 0, w, h)
     }
     function startDraw(e) {
+        // alert("start")
         drawing = true
-        lastX = e.layerX;
-        lastY = e.layerY;
-        drawShape(e.layerX, e.layerY)
+        var newx = e.clientX - xoffset;
+        var newy = e.clientY - yoffset
+        lastX = newx;
+        lastY = newy;
+        drawShape(newx, newy)
     }
     var xmassize = 40;
     function drawShape(x, y) {
-
-        // drawContext.fillStyle = "black"
-        // drawContext.fillRect(x - 5, y - 5, 10, 10)
-
         drawContext.drawImage(xmastree, x - xmassize / 2, y - xmassize / 2, xmassize, xmassize)
     }
     function draw(e) {
+        var newx = e.clientX - xoffset;
+        var newy = e.clientY - yoffset
         // console.log(e)
         if (drawing) {
-            var dist = Math.sqrt(Math.pow(e.layerX - lastX, 2), Math.pow(e.layerY - lastY, 2));
+            var dist = Math.sqrt(Math.pow(newx - lastX, 2), Math.pow(newy - lastY, 2));
             // console.log(dist)
             for (var i = 0; i < dist; i += 0.3) {
-                drawShape(lastX + ((e.layerX - lastX) * i / dist), lastY + ((e.layerY - lastY) * i / dist))
+                drawShape(lastX + ((newx - lastX) * i / dist), lastY + ((newy - lastY) * i / dist))
             }
 
-            drawShape(e.layerX, e.layerY)
+            drawShape(newx, newy)
 
 
             drawWrapping();
 
-            lastX = e.layerX;
-            lastY = e.layerY;
+            lastX = newx;
+            lastY = newy;
         }
     }
     function endDraw() {
@@ -112,7 +127,7 @@ img.onload = () => {
 
     wrappingPaper.src = "cover2.jpg";
 
-    
+
     sizeCanvas()
 }
 
